@@ -1,0 +1,19 @@
+{
+  "name": "resource-management-typescript",
+  "description": "This sample demonstrates how to manage resources in an Azure VM with an MSI token using a typescript client.",
+  "version": "0.1.0",
+  "main": "./dist/lib/index.js",
+  "dependencies": {
+    "ms-rest": "^2.2.2",
+    "ms-rest-azure": "^2.3.1",
+    "azure-arm-compute": "^3.0.0-preview",
+    "azure-arm-resource": "^2.0.0-preview"
+  },
+  "devDependencies": {
+    "@types/node": "*",
+    "typescript": "^2.5.2"
+  },
+  "scripts": {
+    "tsc": "tsc -p tsconfig.json"
+  }
+}
