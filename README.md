@@ -1,57 +1,81 @@
-# Project Name
+---
+services: resources
+platforms: nodejs
+author: amarzavery
+---
 
-(short, 1-3 sentenced, description of the project)
+# Manage resources using Managed Service Identity using node.js
 
-## Features
+This sample demonstrates how to manage Azure resources via Managed Service Identity using the node.js SDK with typescript.
 
-This project framework provides the following features:
+**On this page**
 
-* Feature 1
-* Feature 2
-* ...
+- [Create an Azure VM with MSI extension](#pre-requisite)
+- [Run this sample](#run)
+- [What is example.rb doing?](#example)
+    - [Create an MSI Token Provider](#msi)
+    - [Create a resource client](#resource-client)
 
-## Getting Started
+<a id="pre-requisite"></a>
+## Create an Azure VM with MSI extension
 
-### Prerequisites
+[Azure Compute VM with MSI](https://github.com/Azure-Samples/compute-node-msi-vm)
 
-(ideally very short, if any)
+<a id="run"></a>
+## Run this sample
 
-- OS
-- Library version
-- ...
+1. If you don't already have it, [get the latest LTS version of node.js](https://nodejs.org).
 
-### Installation
+1. Clone the repository.
 
-(ideally very short)
+    ```
+    git clone https://github.com/Azure-Samples/compute-node-msi-vm.git
+    ```
 
-- npm install [package name]
-- mvn install
-- ...
+1. Install the dependencies.
 
-### Quickstart
-(Add steps to get up and running quickly)
+    ```
+    cd compute-node-msi-vm
+    npm install
+    ```
 
-1. git clone [repository clone url]
-2. cd [respository name]
-3. ...
+1. Set the following environment variables.
 
+    ```
+    export AZURE_TENANT_ID={your tenant id}
+    export AZURE_SUBSCRIPTION_ID={your subscription id}
+    ```
 
-## Demo
+    > [AZURE.NOTE] On Windows, use `set` instead of `export`.
 
-A demo app is included to show how to use the project.
+1. Run the sample.
 
-To run the demo, follow these steps:
+    ```
+    node dist/lib/index.js
+    ```
 
-(Add steps to start up the demo)
+<a id="example"></a>
+## What does example.rb doing?
+<a id="msi"></a>
+### Create an MSI Token Provider
+Initialize `subscription_id`, `tenant_id` and `port` from environment variables.
+```typescript
+public domain: string = process.env['DOMAIN'];
+public subscriptionId: string = process.env['AZURE_SUBSCRIPTION_ID'];
+public port: number = process.env['MSI_PORT'] ? parseInt(process.env['MSI_PORT']) : 50342; //If not provided then we assume the default port
+```
 
-1.
-2.
-3.
+Now, we will create token credential using `the msi login`. 
+```javascript
+// Create Managed Service Identity as the token provider
+credentials = await msRestAzure.loginWithMSI(this.state.domain, { port: this.state.port });
+```
 
-## Resources
+<a id="resource-client"></a>
+### Create a resource client and list resource groups
+Now, we will create a resource management client using Managed Service Identity token provider.
 
-(Any additional resources or related projects)
-
-- Link to supporting information
-- Link to similar sample
-- ...
+```javascript
+this.resourceClient = new ResourceManagementClient(credentials, this.state.subscriptionId);
+let finalResult = await this.resourceClient.resourceGroups.list();
+```

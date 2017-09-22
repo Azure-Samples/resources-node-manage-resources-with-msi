@@ -37,7 +37,7 @@ class MSISample {
   async execute(): Promise<void> {
     let credentials: msRestAzure.MSITokenCredentials;
     try {
-      credentials = await msRestAzure.withMSI(this.state.domain, { port: this.state.port });
+      credentials = await msRestAzure.loginWithMSI(this.state.domain, { port: this.state.port });
       this.resourceClient = new ResourceManagementClient(credentials, this.state.subscriptionId);
       console.log('\nListing all the resourc groups within a subscription:');
       let finalResult = await this.resourceClient.resourceGroups.list();
