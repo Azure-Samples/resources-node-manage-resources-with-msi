@@ -12,7 +12,7 @@ This sample demonstrates how to manage Azure resources via Managed Service Ident
 
 - [Create an Azure VM with MSI extension](#pre-requisite)
 - [Run this sample](#run)
-- [What is example.rb doing?](#example)
+- [What is index.js doing?](#example)
     - [Create an MSI Token Provider](#msi)
     - [Create a resource client](#resource-client)
 
