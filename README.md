@@ -42,8 +42,11 @@ This sample demonstrates how to manage Azure resources via Managed Service Ident
 1. Set the following environment variables.
 
     ```
-    export AZURE_TENANT_ID={your tenant id}
     export AZURE_SUBSCRIPTION_ID={your subscription id}
+    ```
+    - optionally you can also set the port. If not set then it will use the default port 50342. This should be the same value that you specified while creating the vm with SMI extension.
+    ```
+    export MSI_PORT={port numer}
     ```
 
     > [AZURE.NOTE] On Windows, use `set` instead of `export`.
@@ -55,7 +58,7 @@ This sample demonstrates how to manage Azure resources via Managed Service Ident
     ```
 
 <a id="example"></a>
-## What does example.rb doing?
+## What is index.js doing?
 <a id="msi"></a>
 ### Create an MSI Token Provider
 Initialize `subscription_id`, `tenant_id` and `port` from environment variables.
@@ -68,7 +71,7 @@ public port: number = process.env['MSI_PORT'] ? parseInt(process.env['MSI_PORT']
 Now, we will create token credential using `the msi login`. 
 ```javascript
 // Create Managed Service Identity as the token provider
-credentials = await msRestAzure.loginWithMSI(this.state.domain, { port: this.state.port });
+credentials = await msRestAzure.loginWithMSI({ port: this.state.port });
 ```
 
 <a id="resource-client"></a>

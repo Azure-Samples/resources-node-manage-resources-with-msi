@@ -9,7 +9,6 @@ import * as util from 'util';
 import { ResourceManagementClient, ResourceModels } from 'azure-arm-resource';
 
 class State {
-  public domain: string = process.env['DOMAIN'];
   public subscriptionId: string = process.env['AZURE_SUBSCRIPTION_ID'];
   public port: number = process.env['MSI_PORT'] ? parseInt(process.env['MSI_PORT']) : 50342; //If not provided then we assume the default port
   public options: msRestAzure.AzureTokenCredentialsOptions;
@@ -22,7 +21,6 @@ class Helpers {
 
   static validateEnvironmentVariables(): void {
     let envs = [];
-    if (!process.env['DOMAIN']) envs.push('DOMAIN');
     if (!process.env['AZURE_SUBSCRIPTION_ID']) envs.push('AZURE_SUBSCRIPTION_ID');
     if (envs.length > 0) {
       throw new Error(`please set/export the following environment variables: ${envs.toString()}`);
@@ -37,12 +35,13 @@ class MSISample {
   async execute(): Promise<void> {
     let credentials: msRestAzure.MSITokenCredentials;
     try {
-      credentials = await msRestAzure.loginWithMSI(this.state.domain, { port: this.state.port });
+      credentials = await msRestAzure.loginWithMSI({ port: this.state.port });
       this.resourceClient = new ResourceManagementClient(credentials, this.state.subscriptionId);
-      console.log('\nListing all the resourc groups within a subscription:');
+      console.log('\nListing all the resource groups within a subscription:');
       let finalResult = await this.resourceClient.resourceGroups.list();
       console.dir(finalResult, { depth: null, colors: true });
     } catch (err) {
+      console.log(err);
       return Promise.reject(err);
     }
   }

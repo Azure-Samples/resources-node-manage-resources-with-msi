@@ -13,7 +13,6 @@ const process = require("process");
 const azure_arm_resource_1 = require("azure-arm-resource");
 class State {
     constructor() {
-        this.domain = process.env['DOMAIN'];
         this.subscriptionId = process.env['AZURE_SUBSCRIPTION_ID'];
         this.port = process.env['MSI_PORT'] ? parseInt(process.env['MSI_PORT']) : 50342;
     }
@@ -24,8 +23,6 @@ class Helpers {
     }
     static validateEnvironmentVariables() {
         let envs = [];
-        if (!process.env['DOMAIN'])
-            envs.push('DOMAIN');
         if (!process.env['AZURE_SUBSCRIPTION_ID'])
             envs.push('AZURE_SUBSCRIPTION_ID');
         if (envs.length > 0) {
@@ -41,13 +38,14 @@ class MSISample {
         return __awaiter(this, void 0, void 0, function* () {
             let credentials;
             try {
-                credentials = yield msRestAzure.loginWithMSI(this.state.domain, { port: this.state.port });
+                credentials = yield msRestAzure.loginWithMSI({ port: this.state.port });
                 this.resourceClient = new azure_arm_resource_1.ResourceManagementClient(credentials, this.state.subscriptionId);
-                console.log('\nListing all the resourc groups within a subscription:');
+                console.log('\nListing all the resource groups within a subscription:');
                 let finalResult = yield this.resourceClient.resourceGroups.list();
                 console.dir(finalResult, { depth: null, colors: true });
             }
             catch (err) {
+                console.log(err);
                 return Promise.reject(err);
             }
         });
