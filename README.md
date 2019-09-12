@@ -1,7 +1,11 @@
 ---
-services: resources
-platforms: nodejs
-author: amarzavery
+page_type: sample
+languages:
+- typescript
+products:
+- azure
+description: "This sample demonstrates how to manage Azure resources via Managed Service Identity using the node.js SDK with typescript."
+urlFragment: resources-node-manage-resources-with-msi
 ---
 
 # Manage resources using Managed Service Identity using node.js
